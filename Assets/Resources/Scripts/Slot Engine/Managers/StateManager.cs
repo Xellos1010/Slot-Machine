@@ -41,8 +41,8 @@ public static class StateManager
     //State Manager Functions
 	public static void SwitchState(States State)
     {
-        ActivateSwitchState(State);
         enCurrentState = State;
+        ActivateSwitchState(State);
 	}
 
     public static void SwitchStateSpin(States SlotEngineState)

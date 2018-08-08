@@ -60,7 +60,7 @@ public class Matrix : MonoBehaviour
              }
         }
 #else
-        if (Input.GetKeyDown(KeyCode.Space))
+        /*if (Input.GetKeyDown(KeyCode.Space))
         {
             if (StateManager.enCurrentState != States.BaseGameSpinLoop && StateManager.enCurrentState != States.BaseGameSpinStart)
                 StartCoroutine(SpinReelsTest());
@@ -70,7 +70,7 @@ public class Matrix : MonoBehaviour
                 Debug.Log("Ending Spin State");
                 StartCoroutine(SpinEnd());
             }
-        }
+        }*/ 
 #endif
     }
 
@@ -78,6 +78,7 @@ public class Matrix : MonoBehaviour
 
     public void SpinTest()
     {
+        StopAllCoroutines();
         if (StateManager.enCurrentState != States.BaseGameSpinLoop && StateManager.enCurrentState != States.BaseGameSpinStart)
             StartCoroutine(SpinReelsTest());
         else if (StateManager.enCurrentState == States.BaseGameSpinLoop)
@@ -104,13 +105,19 @@ public class Matrix : MonoBehaviour
         }
     }
     
+    IEnumerator SpinLoop()
+    {
+        yield return new WaitForSeconds(SlotEngine._instance.reelSpinTime);
+        SpinTest();
+    }
+
     IEnumerator SpinEnd()
     {
         StateManager.SwitchState(States.BaseGameSpinEnd);
         Debug.Log("ReelSymbols.Count = " + ReelSymbols.Count);
         for (int i = 0; i < rReels.Length; i++)
         {
-            rReels[i].StopReel();//Only use for specific reel Sotp features
+            rReels[i].StopReel();//Only use for specific reel stop features
         }
         yield return 0;
     }
@@ -124,6 +131,11 @@ public class Matrix : MonoBehaviour
 
 	public void GenerateMatrix()
     {
+        if(transform.childCount > 0)
+        {
+            for (int i = transform.childCount - 1; i >= 0; i--)
+                DestroyImmediate(transform.GetChild(i).gameObject);
+        }
         Debug.Log("Matrix.cs enMatrixType int = " + (int)enMatrixType + " enMatrixType = " + enMatrixType + " rReelsLength = ");
         //Setting the Type of matrix ex:3x5 4x5 3x4x5x4x3
         object Matrix = SlotEngine.ReturnMatrixtype();
@@ -161,7 +173,7 @@ public class Matrix : MonoBehaviour
                 if (iSlotsPerReel == 0)
                     iSlotsPerReel = iMatrixtemp[i] + (SlotEngine._instance.iExtraSlotsPerReel);
             }
-            //rReels[i].transform.position = GeneratePosition(i);
+            rReels[i].transform.position = GeneratePosition(i);
         }
 	}
 
@@ -182,7 +194,7 @@ public class Matrix : MonoBehaviour
     Vector3 GeneratePosition(int iReelNumber)
     {
 
-        float XAxisValue = (SlotEngine._instance.v2ReelTopLeft.x) + (SlotEngine._instance.fReelPadding * iReelNumber);
+        float XAxisValue = (SlotEngine._instance.v2ReelTopLeft.x) + (SlotEngine._instance.reelPaddingX * iReelNumber);
 
         //Need to have the Y axis Value set when the slots are assigned to the Reel Area.
         float YAxisValue = 0;//SlotEngine._instance.fStartingSpotReelY;
@@ -243,6 +255,11 @@ public class Matrix : MonoBehaviour
         }
     }
 
+    internal void UpdatePositionReels()
+    {
+        for(int i = 0; i < rReels.Length;i++)
+            rReels[i].transform.position = GeneratePosition(i);
+    }
 }
 
 #if UNITY_EDITOR
@@ -259,14 +276,23 @@ class MatrixEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
+        if (GUILayout.Button("Generate Reels"))
+        {
+            myTarget.GenerateMatrix();
+        }
+        if (GUILayout.Button("Set Reel Positions"))
+        {
+            myTarget.UpdatePositionReels();
+        }
+        EditorGUILayout.EnumPopup(StateManager.enCurrentState);
         if (Application.isPlaying)
         {
             if (StateManager.enCurrentState != States.BaseGameSpinLoop && StateManager.enCurrentState != States.BaseGameSpinStart)
-                if (GUILayout.Button("Test Spin"))
+                if (GUILayout.Button("Start Test Spin"))
                 {
                     myTarget.SpinTest();
                 }
-                else if (StateManager.enCurrentState == States.BaseGameSpinLoop)
+                if (StateManager.enCurrentState == States.BaseGameSpinLoop)
                 {
                     if (GUILayout.Button("End Test Spin"))
                     {

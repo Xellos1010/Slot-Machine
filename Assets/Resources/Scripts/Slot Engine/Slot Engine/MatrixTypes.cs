@@ -10,6 +10,7 @@
 //
 
 //Had to add m infront of Matrix Types due to identifier error
+[System.Serializable]
 public enum MatrixTypes
 {
 	None,

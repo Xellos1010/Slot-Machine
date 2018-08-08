@@ -50,15 +50,15 @@ public class SlotEngine : MonoBehaviour
     public float fReelDividerWidth = 6;
     public Vector2 MatrixPadding = new Vector2(10,10);
     public Vector2 v2ReelTopLeft;
-
+    public float reelSpinTime = 5;
     [Range(0, 50)]
-    public float fReelPadding = 40;
+    public float reelPaddingX = 40;
     [Range(0, 1)]
     public float fReelSpinDelay = .2f;
 
     public float fStartingSpotSlot = 50;
-    [Range(0, 50)]
-    public float fSlotPadding = 7.5f;
+    [Range(0, 250)]
+    public float slotPaddingY;
 
     /// <summary>
     /// Used to cushion the top and bottom of the reel
@@ -216,6 +216,21 @@ public class SlotEngine : MonoBehaviour
     {
         //Play State Transition Switching(State);
     }
+
+    internal void UpdateReelSlotPositions()
+    {
+        Matrix matrixInUse = FindObjectOfType<Matrix>();
+        for (int i = 0; i < matrixInUse.transform.childCount; i++)
+        {
+            matrixInUse.transform.GetChild(i).GetComponent<Reel>().UpdateSlotPositions();
+        }
+    }
+
+    internal void UpdateReelPositions()
+    {
+        Matrix matrixInUse = FindObjectOfType<Matrix>();
+        matrixInUse.UpdatePositionReels();
+    }
     //******************
 }
 
@@ -224,10 +239,14 @@ public class SlotEngine : MonoBehaviour
 class SlotEngineEditor : Editor
 {
     SlotEngine myTarget;
+    SerializedProperty reelPaddingX;
+    SerializedProperty slotPaddingY;
 
     public void OnEnable()
     {
         myTarget = (SlotEngine)target;
+        reelPaddingX = serializedObject.FindProperty("reelPaddingX");
+        slotPaddingY = serializedObject.FindProperty("slotPaddingY");
     }
 
     public override void OnInspectorGUI()
@@ -242,6 +261,24 @@ class SlotEngineEditor : Editor
             if (myTarget.mMainMatrix != null)
                 DestroyImmediate(myTarget.mMainMatrix.gameObject);
             myTarget.mMainMatrix = myTarget.CreateMatrix();
+        }
+
+        EditorGUI.BeginChangeCheck();
+        float newReelValue = EditorGUILayout.Slider(reelPaddingX.floatValue, 0, 250);
+        float slotNewValue = EditorGUILayout.Slider(slotPaddingY.floatValue, 0, 250);
+        if (EditorGUI.EndChangeCheck())
+        {
+            if (myTarget.slotPaddingY != slotNewValue)
+            {
+                myTarget.slotPaddingY = slotNewValue;
+                myTarget.UpdateReelSlotPositions();
+            }
+            
+            if(myTarget.reelPaddingX != newReelValue)
+            {
+                myTarget.reelPaddingX = newReelValue;
+                myTarget.UpdateReelPositions();
+            }
         }
     }
 }

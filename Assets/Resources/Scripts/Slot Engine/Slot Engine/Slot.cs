@@ -124,7 +124,7 @@ public class Slot :MonoBehaviour
     {
         //Debug.Log("Generating Position in " + transform.name + " with a state of " + StateManager.enCurrentState.ToString());
         if (enSlotState == States.BaseGameSpinStart || enSlotState == States.BonusGameSpinStart)
-            return new Vector3(transform.position.x, (transform.localPosition.y - (SlotEngine._instance.fSlotPadding)), 0);
+            return new Vector3(transform.position.x, (transform.localPosition.y - (SlotEngine._instance.slotPaddingY)), 0);
         else if (enSlotState == States.BaseGameSpinLoop || enSlotState == States.BonusGameSpinLoop)
         {
             //Debug.Log("Generateing Loop Position of " + GenerateLoopPosition() +  " for " + transform.name);
@@ -150,7 +150,7 @@ public class Slot :MonoBehaviour
     Vector3 GenerateCurrentStartPathPositionTween()
     {
         float yAxisValue = 0;
-        yAxisValue = SlotEngine._instance.fStartingSpotSlot - (SlotEngine._instance.fSlotPadding * iPositonInReel);
+        yAxisValue = SlotEngine._instance.fStartingSpotSlot - (SlotEngine._instance.slotPaddingY * iPositonInReel);
         //Debug.Log("GenerateCurrentStartPosition() for " + transform.name + " is returning a yAxisValue of " + yAxisValue);
         return new Vector3(transform.localPosition.x, yAxisValue, transform.localPosition.z);
     }
@@ -158,20 +158,20 @@ public class Slot :MonoBehaviour
     Vector3 GenerateLoopPositionStart()
     {
         float yAxisValue = 0;
-        yAxisValue = SlotEngine._instance.fStartingSpotSlot - (SlotEngine._instance.fSlotPadding * iPositonInReel);
+        yAxisValue = SlotEngine._instance.fStartingSpotSlot - (SlotEngine._instance.slotPaddingY * iPositonInReel);
         //Debug.Log("GenerateLoopPosition() for " + transform.name + " in " + transform.parent.name + " is returning a yAxisValue of " + yAxisValue);
         return new Vector3(transform.position.x,yAxisValue,transform.position.z);
     }
 
     Vector3 GenerateEndPosition()
     {
-        return new Vector3(transform.position.x, (SlotEngine._instance.fStartingSpotSlot - (SlotEngine._instance.fSlotPadding * transform.parent.childCount)), 0);
+        return new Vector3(transform.position.x, (SlotEngine._instance.fStartingSpotSlot - (SlotEngine._instance.slotPaddingY * transform.parent.childCount)), 0);
     }
 
     Vector3 GenerateNextTweenPosition()
     {
         float yAxisValue = 0;
-        yAxisValue = SlotEngine._instance.fStartingSpotSlot - (SlotEngine._instance.fSlotPadding * (iPositonInReel+1));
+        yAxisValue = SlotEngine._instance.fStartingSpotSlot - (SlotEngine._instance.slotPaddingY * (iPositonInReel+1));
         //Debug.Log("GenerateCurrentStartPosition() for " + transform.name + " is returning a yAxisValue of " + yAxisValue);
         return new Vector3(transform.localPosition.x, yAxisValue, transform.localPosition.z);
     }
@@ -334,7 +334,7 @@ public class Slot :MonoBehaviour
         float currentY = transform.position.y;
         float currentPercentageOnPath = currentY / (v3CurrentTweenpath[1].y - v3CurrentTweenpath[0].y);
 
-        float correctY = NextSlot.y + SlotEngine._instance.fSlotPadding;
+        float correctY = NextSlot.y + SlotEngine._instance.slotPaddingY;
         //float correctPercentage = correctY / (v3CurrentTweenpath[1].y - v3CurrentTweenpath[0].y);
         return correctY;
     }
@@ -344,7 +344,7 @@ public class Slot :MonoBehaviour
         float currentY = fFutureY;
         float currentPercentageOnPath = currentY / (v3CurrentTweenpath[1].y - v3CurrentTweenpath[0].y);
 
-        float correctY = NextSlot.y + SlotEngine._instance.fSlotPadding;
+        float correctY = NextSlot.y + SlotEngine._instance.slotPaddingY;
         float differentY = currentY - correctY;
         return differentY;
     }
@@ -475,7 +475,7 @@ public class Slot :MonoBehaviour
 
     Vector3 GenerateNextSymbolLocationWithPadding()
     {
-        return new Vector3(transform.localPosition.x, rReelParentObject.SyncronizePositionNextSlot(this).y + SlotEngine._instance.fSlotPadding, transform.localPosition.z);
+        return new Vector3(transform.localPosition.x, rReelParentObject.SyncronizePositionNextSlot(this).y + SlotEngine._instance.slotPaddingY, transform.localPosition.z);
     }
 
     public bool bLoopEnabled = false;

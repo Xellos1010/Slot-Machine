@@ -10,10 +10,13 @@
 //
 using UnityEngine;
 using System;
-using System.Collections.Generic;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 public class Reel : MonoBehaviour
 {
-	public Slot[] slSlots;
+    public MatrixTypes matrix;
+    public Slot[] slSlots;
     public delegate void SpinDelegate();
     public delegate void SpinDelegateSwitch(States State);
     public event SpinDelegate ActivateSpinState;
@@ -38,13 +41,11 @@ public class Reel : MonoBehaviour
 
     public void GenerateSlots(int iSlotCount, Transform tParent)
     {
-        //Debug.log("Setting Slots for a count of " + iSlotCount);
         GenerateStartingSlotY(iSlotCount);
         slSlots = new Slot[iSlotCount];
         for (int i = 0; i < iSlotCount; i++)
         {
             slSlots[i] = CreateSlot(i);
-            //Debug.log("Setting Name for Slot " + i);
             slSlots[i].transform.name = "Slot_" + i;
             //Set transform Before Setting Parent
             slSlots[i].transform.parent = tParent;
@@ -136,8 +137,7 @@ public class Reel : MonoBehaviour
 
     void GenerateStartingSlotY(int iSlotCount)
     {
-        SlotEngine._instance.fStartingSpotSlot = SlotEngine._instance.v2ReelTopLeft.y + (SlotEngine._instance.fSlotPadding * (SlotEngine._instance.iExtraSlotsPerReel-1));
-        //SlotEngine._instance.fStartingSpotSlot = 
+        SlotEngine._instance.fStartingSpotSlot = SlotEngine._instance.v2ReelTopLeft.y + (SlotEngine._instance.slotPaddingY * (SlotEngine._instance.iExtraSlotsPerReel-1)); 
     }
 
     //**Need to have slots generate their position
@@ -147,7 +147,7 @@ public class Reel : MonoBehaviour
         //Need To Determine How many Slots are in the Reel and calculate the iExtraSlotsPerReel (-1 to include the end slot not being active)
         //of the reel into the starting Y Position
 
-        float yAxis = SlotEngine._instance.fStartingSpotSlot - (SlotEngine._instance.fSlotPadding * iSlotNumber);
+        float yAxis = SlotEngine._instance.fStartingSpotSlot - (SlotEngine._instance.slotPaddingY * iSlotNumber);
         //if(
         //yAxis = SlotEngine._instance.v2ReelTopLeft.y  SlotEngine._instance.iExtraSlotsPerReel
         return new Vector3(0, yAxis, 0);
@@ -179,7 +179,14 @@ public class Reel : MonoBehaviour
         return 0;
     }
 
-    public Symbols[] GenerateEndSymbols()
+    internal void UpdateSlotPositions()
+    {
+        for (int i = 0; i < slSlots.Length; i++)
+        {
+            slSlots[i].transform.position = GenerateLocalPosition(i);
+        }
+    }
+        public Symbols[] GenerateEndSymbols()
     {
         Symbols[] temp = new Symbols[slSlots.Length];
         for (int i = 0; i < temp.Length; i++)
@@ -192,6 +199,12 @@ public class Reel : MonoBehaviour
     public void PlayAnimationSpecificSlot(int iSlotNumber)
     {
         slSlots[iSlotNumber].PlayAnimation();
+    }
+
+    internal void ClearReelSlots()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+            DestroyImmediate(transform.GetChild(i).gameObject);
     }
 
     /*void Update()
@@ -207,3 +220,56 @@ public class Reel : MonoBehaviour
     }*/
 
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(Reel))]
+class ReelEditor : Editor
+{
+    Reel myTarget;
+
+    public void OnEnable()
+    {
+        myTarget = (Reel)target;
+    }
+
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        if (GUILayout.Button("Generate Slots"))
+        {
+            myTarget.ClearReelSlots();
+            Vector2 v2Matrixtemp = (Vector2)ReturnMatrixtype(myTarget.matrix);
+            myTarget.GenerateSlots((int)v2Matrixtemp.x + SlotEngine._instance.iExtraSlotsPerReel, myTarget.transform);
+        }
+
+    }
+
+    public object ReturnMatrixtype(MatrixTypes mMatrix)
+    {
+        object ReturnValue = null;
+
+        switch (mMatrix)
+        {
+            case MatrixTypes.m3x5:
+                ReturnValue = new Vector2(3, 5);
+                break;
+            case MatrixTypes.m3x6:
+                ReturnValue = new Vector2(3, 6);
+                break;
+            case MatrixTypes.m4x5:
+                ReturnValue = new Vector2(4, 5);
+                break;
+            case MatrixTypes.m4x6:
+                ReturnValue = new Vector2(4, 6);
+                break;
+            default:
+                Debug.Log("Matrix is not able to set Vector2 to Define. Sending Matrix as an int[]");
+                if (mMatrix == MatrixTypes.m3x4x5x4x3)
+                    ReturnValue = new int[5] { 3, 4, 5, 4, 3 };
+                break;
+        }
+
+        return ReturnValue;
+    }
+}
+#endif
