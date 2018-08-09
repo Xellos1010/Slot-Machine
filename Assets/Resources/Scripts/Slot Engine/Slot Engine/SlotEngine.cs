@@ -52,10 +52,9 @@ public class SlotEngine : MonoBehaviour
     public Vector2 v2ReelTopLeft;
     public float reelSpinTime = 5;
     [Range(0, 50)]
-    public float reelPaddingX = 40;
+    public float reelPaddingX;
     [Range(0, 1)]
     public float fReelSpinDelay = .2f;
-
     public float fStartingSpotSlot = 50;
     [Range(0, 250)]
     public float slotPaddingY;
@@ -71,9 +70,6 @@ public class SlotEngine : MonoBehaviour
 
     [Range(0, 100)]
     public float fStartStopSpeed = 50;
-   /* [Range(0, 100)]
-    public float fSpinSpeed = 50;*/
-
     [Range(1, 3)]
     public int iExtraSlotsPerReel = 2;
 

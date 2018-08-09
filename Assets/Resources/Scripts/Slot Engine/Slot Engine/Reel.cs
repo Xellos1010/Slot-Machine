@@ -23,6 +23,7 @@ public class Reel : MonoBehaviour
     public event SpinDelegateSwitch SpinStateSwitched;
 
     private int iSlotEndingNumber;
+    public int iExtraSlots; //Padding for smooth spins
     private Symbols[] EndReelConfiguration;
 
     [Range(0, 500)]
@@ -226,10 +227,11 @@ public class Reel : MonoBehaviour
 class ReelEditor : Editor
 {
     Reel myTarget;
-
+    SerializedProperty iExtraSlots;
     public void OnEnable()
     {
         myTarget = (Reel)target;
+        iExtraSlots = serializedObject.FindProperty("iExtraSlots");
     }
 
     public override void OnInspectorGUI()
@@ -239,9 +241,21 @@ class ReelEditor : Editor
         {
             myTarget.ClearReelSlots();
             Vector2 v2Matrixtemp = (Vector2)ReturnMatrixtype(myTarget.matrix);
-            myTarget.GenerateSlots((int)v2Matrixtemp.x + SlotEngine._instance.iExtraSlotsPerReel, myTarget.transform);
+            int extraslots = 0;
+            try
+            {
+                extraslots = SlotEngine._instance.iExtraSlotsPerReel;
+            }
+            catch
+            {
+                extraslots = iExtraSlots.intValue;
+            }
+            myTarget.GenerateSlots((int)v2Matrixtemp.x + extraslots, myTarget.transform);
         }
-
+        if (GUILayout.Button("Spin Reel Test"))
+        {
+            myTarget.SpinReel();
+        }
     }
 
     public object ReturnMatrixtype(MatrixTypes mMatrix)
