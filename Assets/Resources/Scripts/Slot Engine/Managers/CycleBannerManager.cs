@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class CycleBannerManager : MonoBehaviour 
@@ -28,12 +29,32 @@ public class CycleBannerManager : MonoBehaviour
     public float fFadeLength;
 
     public bool bCycleEnabled = true;
+    public CanvasGroup canvasGroup
+    {
+        get
+        {
+            if (_canvasGroup == null)
+                _canvasGroup = GetComponent<CanvasGroup>();
+            return _canvasGroup;
+        }
+    }
+    private CanvasGroup _canvasGroup;
+    private RawImage rawImage
+    {
+        get
+        {
+            if (_rawImage == null)
+                _rawImage = GetComponent<RawImage>();
+            return _rawImage;
+        }
+    }
+    private RawImage _rawImage;
 
     private bool bBannerObjectEnabled
     {
         get
         {
-            if (GetComponent<GUITexture>().color.a < 1)
+            if (canvasGroup.alpha < 1)
                 return false;
             else
                 return true;
@@ -49,8 +70,8 @@ public class CycleBannerManager : MonoBehaviour
     private void SetDefaultValues()
     {
         iCycleBannerNumber = 0;
-        GetComponent<GUITexture>().color = new Color(GetComponent<GUITexture>().color.r, GetComponent<GUITexture>().color.g, GetComponent<GUITexture>().color.b, 0);
-        GetComponent<GUITexture>().texture = tCycleBanners[iCycleBannerNumber];
+        canvasGroup.alpha = 0;
+        rawImage.texture = tCycleBanners[iCycleBannerNumber];
         bCycleEnabled = true;
     }
 
@@ -62,7 +83,7 @@ public class CycleBannerManager : MonoBehaviour
             iCycleBannerNumber = 0;
 
         }
-        iTween.ColorTo(gameObject, new Color(GetComponent<GUITexture>().color.r, GetComponent<GUITexture>().color.g, GetComponent<GUITexture>().color.b, 0), fFadeLength);
+        LeanTween.alphaCanvas(_canvasGroup, 0, fFadeLength);
         yield return new WaitForSeconds(fFadeLength);
 
     }
@@ -80,14 +101,9 @@ public class CycleBannerManager : MonoBehaviour
         return ReturnValue;
     }
 
-    private GUITexture ReturnCycleBannerObject()
-    {
-        return GameObject.FindGameObjectWithTag("CycleBannerObject").GetComponent<GUITexture>();
-    }
-
     private void SwitchCycleBannerTexture(Texture tTexture)
     {
-        GetComponent<GUITexture>().texture = tTexture;
+        rawImage.texture = tTexture;
     }
 
 
@@ -102,13 +118,13 @@ public class CycleBannerManager : MonoBehaviour
             if (!bBannerObjectEnabled)
             {
                 IncrementCycleBanners();
-                iTween.ColorTo(gameObject, new Color(GetComponent<GUITexture>().color.r, GetComponent<GUITexture>().color.g, GetComponent<GUITexture>().color.b, 1), fFadeLength);
+                LeanTween.alphaCanvas(_canvasGroup, 1, fFadeLength);
                 yield return new WaitForSeconds(fFadeLength);
                 yield return new WaitForSeconds(iCycleOnDuration);
             }
             else
             {
-                iTween.ColorTo(gameObject, new Color(GetComponent<GUITexture>().color.r, GetComponent<GUITexture>().color.g, GetComponent<GUITexture>().color.b, 0), fFadeLength);
+                LeanTween.alphaCanvas(_canvasGroup, 0, fFadeLength);
                 yield return new WaitForSeconds(fFadeLength);
                 yield return new WaitForSeconds(iCycleOffDuration);
             }
