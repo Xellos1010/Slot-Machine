@@ -40,7 +40,7 @@ public class Reel : MonoBehaviour
         fSpinSpeed = 450;
     }
 
-    public void GenerateSlots(int iSlotCount, Transform tParent)
+    public void GenerateSlots(int iSlotCount, Transform tParent,bool GenerateStartingCoordinate = false)
     {
         GenerateStartingSlotY(iSlotCount);
         slSlots = new Slot[iSlotCount];
@@ -87,8 +87,7 @@ public class Reel : MonoBehaviour
 
     Slot CreateSlot(int iSlotNumber)
     {
-        GameObject ReturnValue = Instantiate(Resources.Load("Prefabs/Slot")) as GameObject;//new GameObject("Slot_" + iSlotNumber, SlotComponents).GetComponent<Slot>();
-        //ReturnValue.Ran
+        GameObject ReturnValue = Instantiate(Resources.Load("Prefabs/Slot")) as GameObject;
         Debug.Log("Creating Slot from prefab");
         return ReturnValue.GetComponent<Slot>();
     }

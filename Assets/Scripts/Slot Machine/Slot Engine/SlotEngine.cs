@@ -13,8 +13,6 @@ using UnityEngine;
 using UnityEditor;
 #endif
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 public class SlotEngine : MonoBehaviour
 {
@@ -84,9 +82,19 @@ public class SlotEngine : MonoBehaviour
     //**********
 
     //Unity Functions
+    private void Start()
+    {
+        SlotEngine.instance = this;
+    }
+
     void OnEnable()
     {
         StateManager.ActivateSwitchState += SwitchState; //Adds main state function to state machine
+    }
+
+    void OnDisable()
+    {
+        StateManager.ActivateSwitchState -= SwitchState;
     }
 
     void Update()
@@ -112,7 +120,7 @@ public class SlotEngine : MonoBehaviour
             }
         }
 #else
-        /*
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("Test Generating Matrix");
@@ -120,7 +128,7 @@ public class SlotEngine : MonoBehaviour
             CurrentMode = States.BaseGame;
             try
             {
-                mMainMatrix = CreateMatrix();
+                mMainMatrix = CreateMatrixGameObject();
                 Debug.Log("The Matrix has returned " + mMainMatrix);
             }
             catch
@@ -128,20 +136,15 @@ public class SlotEngine : MonoBehaviour
                 Debug.Log("The Matrix has failed to create");
 
             }
-        }*/
+        }
 #endif
     }
     //************************************
 
     //Default Functions
-    void ZeroValues()
-    {
-        StateManager.ActivateSwitchState -= SwitchState;
-        
-    }
     public static object ReturnMatrixtype()
     {
-        return ReturnMatrixtype(SlotEngine._instance.mMatrixType);
+        return ReturnMatrixtype(_instance.mMatrixType);
     }
 
     public static object ReturnMatrixtype(MatrixTypes mMatrix)
@@ -172,7 +175,11 @@ public class SlotEngine : MonoBehaviour
         return ReturnValue;
     }
 
-    public Matrix CreateMatrix() //Main matric Create Function
+    /// <summary>
+    /// Creates matrix
+    /// </summary>
+    /// <returns>Type of Matrix Generated</returns>
+    public Matrix CreateMatrixGameObject()
     {
         if (mMainMatrix == null)
         {
@@ -182,7 +189,7 @@ public class SlotEngine : MonoBehaviour
             mMainMatrix.transform.tag = "MatrixParent";
             Debug.Log("Matrix was created now Setting Matrix");
         }
-        mMainMatrix.GenerateMatrix(mMatrixType);
+        mMainMatrix.GenerateMatrixByType(mMatrixType);
         return mMainMatrix;
     }
     //**************************
@@ -248,15 +255,11 @@ class SlotEngineEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        if (GUILayout.Button("Set Instance"))
-        {
-            SlotEngine._instance = myTarget;
-        }
         if (GUILayout.Button("Generate Matrix"))
         {
             if (myTarget.mMainMatrix != null)
                 DestroyImmediate(myTarget.mMainMatrix.gameObject);
-            myTarget.mMainMatrix = myTarget.CreateMatrix();
+            myTarget.mMainMatrix = myTarget.CreateMatrixGameObject();
         }
 
         EditorGUI.BeginChangeCheck();

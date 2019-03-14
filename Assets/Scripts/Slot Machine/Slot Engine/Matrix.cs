@@ -122,7 +122,7 @@ public class Matrix : MonoBehaviour
         yield return 0;
     }
 
-	public void GenerateMatrix(MatrixTypes MatrixType)
+	public void GenerateMatrixByType(MatrixTypes MatrixType)
     {
         enMatrixType = MatrixType;
         Debug.Log("Matrix Set to " +MatrixType + " Setting Reels");
