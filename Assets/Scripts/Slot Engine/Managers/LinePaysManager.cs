@@ -101,14 +101,14 @@ using UnityEngine;
                 {
                     //Needed to turn on and then wait
                     bOnOff = true;
-                    GetComponent<GUITexture>().enabled = true;
+                    GetComponent<UnityEngine.UI.RawImage>().enabled = true;
                     yield return _fCycleDurationOn;
                 }
                 else
                 {
                     //Needed to turn off and then wait
                     bOnOff = false;
-                    GetComponent<GUITexture>().enabled = false;
+                    GetComponent<UnityEngine.UI.RawImage>().enabled = false;
                     IncrementPayLineShown();
                     yield return _fCycleDurationOff;
                 }
@@ -118,8 +118,8 @@ using UnityEngine;
 
         void CheckGuiTexture()
         {
-            if (!GetComponent<GUITexture>())
-                gameObject.AddComponent<GUITexture>();
+            if (!GetComponent<UnityEngine.UI.RawImage>())
+                gameObject.AddComponent<UnityEngine.UI.RawImage>();
         }
 
         void IncrementPayLineShown()
@@ -135,7 +135,7 @@ using UnityEngine;
         void SyncTexture()
         {
             if (iCurrentPay <= tLinePays.Length)
-                GetComponent<GUITexture>().texture = tLinePays[iCyclingPays[iCurrentPay]];
+                GetComponent<UnityEngine.UI.RawImage>().texture = tLinePays[iCyclingPays[iCurrentPay]];
         }
 
         //State Manager Hook

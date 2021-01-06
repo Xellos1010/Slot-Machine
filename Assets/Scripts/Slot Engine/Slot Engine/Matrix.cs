@@ -212,7 +212,7 @@ public class Matrix : MonoBehaviour
             Symbols[] temp = ReturnValue[i];
             for (int j = 0; j < ReturnValue[i].Length; j++)
             {
-                temp[j] = (Symbols)UnityEngine.Random.RandomRange(1, (int)Symbols.End);
+                temp[j] = (Symbols)UnityEngine.Random.Range(1, (int)Symbols.End);
             }
             ReturnValue[i] = temp;
         }
@@ -224,7 +224,7 @@ public class Matrix : MonoBehaviour
         Symbols[] ReturnValue = new Symbols[iSlotsPerReel];
         for (int i = 0; i < ReturnValue.Length; i++)
         {
-            ReturnValue[i] = (Symbols)UnityEngine.Random.RandomRange(1, (int)Symbols.End);
+            ReturnValue[i] = (Symbols)UnityEngine.Random.Range(1, (int)Symbols.End);
         }
         return ReturnValue;
     }

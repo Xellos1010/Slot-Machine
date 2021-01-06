@@ -24,7 +24,7 @@ using System.Collections.Generic;
             fMeterCounter = 0;
             fDefaultRackingTime = 5.0f;
             bIsRacking = false;
-            GetComponent<GUIText>().text = "0";
+            GetComponent<UnityEngine.UI.Text>().text = "0";
         }
 
         //Racking function and Hooks.
@@ -116,13 +116,13 @@ using System.Collections.Generic;
         public void UpdateMeter(float fUpdatedValue)
         {
             fMeterCounter = fUpdatedValue;
-            GetComponent<GUIText>().text = ((int)fMeterCounter).ToString();
+            GetComponent<UnityEngine.UI.Text>().text = ((int)fMeterCounter).ToString();
         }
 
         void CheckGUIText()
         {
-            if (!GetComponent<GUIText>())
-                gameObject.AddComponent<GUIText>();
+            if (!GetComponent<UnityEngine.UI.Text>())
+                gameObject.AddComponent<UnityEngine.UI.Text>();
         }
     }
 

@@ -9,7 +9,6 @@
 //
 //
 using UnityEngine;
-using System;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -192,7 +191,7 @@ public class Reel : MonoBehaviour
         Symbols[] temp = new Symbols[slSlots.Length];
         for (int i = 0; i < temp.Length; i++)
         {
-            temp[i] = (Symbols)UnityEngine.Random.RandomRange(0, (int)Symbols.End - 1);
+            temp[i] = (Symbols)Random.Range(0, (int)Symbols.End - 1);
         }
         return temp;
     }

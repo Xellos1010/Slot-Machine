@@ -28,7 +28,7 @@ public class DownloadExample : MonoBehaviour {
 
 		// Forming imag download url
 		string imageUrl = path + "example.png";
-		WWW www1  = new WWW (imageUrl);
+		WWW www1  = new WWW (imageUrl); //#TODO Migrate WWW to UnityWebRequest
 
 
 		// Starting image download
@@ -38,7 +38,7 @@ public class DownloadExample : MonoBehaviour {
 
 		// Forming data download url
 		string dataUrl = path + "example_data.txt";
-		WWW www2  = new WWW (dataUrl);
+		WWW www2  = new WWW (dataUrl); //#TODO Migrate WWW to UnityWebRequest
 
 
 		// Starting data download
@@ -47,7 +47,7 @@ public class DownloadExample : MonoBehaviour {
 
 	}
 
-
+	//#TODO Migrate WWW to UnityWebRequest
 	IEnumerator StartImageCoroutine(WWW www) {
 		yield return www;
 
@@ -61,7 +61,7 @@ public class DownloadExample : MonoBehaviour {
 		}    
 	}
 
-
+	//#TODO Migrate WWW to UnityWebRequest
 	IEnumerator StartDataCoroutine(WWW www) {
 		yield return www;
 
