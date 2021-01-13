@@ -35,6 +35,7 @@ public class TPMeshSpriteAnimation : TPBaseAnimation, TPFrameHolder {
 	
 	public override void ShowFrame(int index) {
 		if(frames.Count == 0) {
+
 			GetComponent<Renderer>().material = null;
 			return;
 		}

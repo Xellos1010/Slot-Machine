@@ -39,13 +39,15 @@ public class TPSpriteAnimation : TPBaseAnimation {
 		currentFrame = index;
 		sprite.opacity = opacity;
 		sprite.showFrame(currentFrame);
+
+		base.ShowFrame(index);
 	}
 	
 	public override void ClearFrames () {
 		sprite.frames =  new List<TPFameInfo>();
 	}
 	
-	
+
 	//--------------------------------------
 	//  GET/SET
 	//--------------------------------------
@@ -91,6 +93,16 @@ public class TPSpriteAnimation : TPBaseAnimation {
 		}
 	} 
 	
+
+	public Color color {
+		get {
+			return sprite.color;
+		}
+
+		set {
+			sprite.color = value;
+		}
+	}
 
 	
 	//--------------------------------------

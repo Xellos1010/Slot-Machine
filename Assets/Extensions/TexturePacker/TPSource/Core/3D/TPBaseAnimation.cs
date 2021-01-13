@@ -12,15 +12,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 public abstract class TPBaseAnimation : TPForceSelectedComponent {
-
-
-	public const string ANIMATION_COMPLETE = "animation_complete";
-	public const string FADE_COMPLETE = "fade_complete";
-	public const string ENTER_FRAME = "enter_frame";
+	
+	public Action<int> OnEnterFrame = delegate {};
+	public Action OnFadeAnimationComplete = delegate {};
+	public Action OnAnimationComplete = delegate {};
 
 	
 	public int currentFrame = 0;
@@ -67,7 +67,7 @@ public abstract class TPBaseAnimation : TPForceSelectedComponent {
 	
 	
 	public virtual void ShowFrame(int index) {
-		dispatch(ENTER_FRAME, index);
+		OnEnterFrame(index);
 	}
 
 
@@ -135,6 +135,8 @@ public abstract class TPBaseAnimation : TPForceSelectedComponent {
 	//--------------------------------------
 	//  GET/SET
 	//--------------------------------------
+
+
 	
 	public abstract int lastFrameIndex {get;} 
 	
@@ -151,9 +153,13 @@ public abstract class TPBaseAnimation : TPForceSelectedComponent {
 		tw.MoveTo(valueFrom, valueTo, time, OnOpacityAnimationEvent);
 		tw.OnComplete = OnFadeComplete;
 	}
+
+
+
+
 	
 	private void OnFadeComplete() {
-		dispatch(FADE_COMPLETE);
+		OnFadeAnimationComplete();
 	}
 
 	private void OnOpacityAnimationEvent(float val) {
@@ -177,8 +183,8 @@ public abstract class TPBaseAnimation : TPForceSelectedComponent {
 				if(Loop) {
 					currentFrame = 0;
 				} else {
-					dispatch(ANIMATION_COMPLETE);
 					StopAnimation();
+					OnAnimationComplete();
 				}
 			} else {
 				currentFrame++;

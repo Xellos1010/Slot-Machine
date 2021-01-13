@@ -39,8 +39,10 @@ public class TPSpriteAnimationEditor : TPBaseAnimationEditor {
 
 
 		base.DrawAnimationInfo();
+
 		
 		EditorGUILayout.PropertyField(_GizmosColor);
+		anim.color = EditorGUILayout.ColorField("Sprite Color: ", anim.color);
 
 
 		base.DrawBaseAnimationGUI();

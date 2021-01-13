@@ -4,6 +4,9 @@
 // @author Osipov Stanislav lacost.st@gmail.com
 //
 ////////////////////////////////////////////////////////////////////////////////
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 using UnityEngine;
 using System.Collections;
@@ -69,11 +72,40 @@ public class TPAtlasTexture
 		atlas = _atlas;
 		calculateVars();
 	}
-	
+
+	//--------------------------------------
+	// PRIVATE METHODS
+	//--------------------------------------
+	#if UNITY_EDITOR
+	public SpriteMetaData generateSprite(){
+
+		SpriteMetaData smd = new SpriteMetaData();
+		Rect rect;
+
+		int newW = _frame.w;
+		int newH = _frame.h;
+		
+		if(_rotated) {
+			newW = _frame.h;
+			newH = _frame.w;
+		}
+
+		rect = new Rect(_frame.x,_frame.y,newW,newH);
+
+		rect.y = atlas.height - (_frame.y+newH);
+		
+		smd.rect = rect;
+		smd.alignment = 0;
+		smd.name = name;
+		smd.pivot = smd.rect.center;
+		
+		return smd;
+	}
+	#endif
 	//--------------------------------------
 	// PUBLIC METHODS
 	//--------------------------------------
-	
+
 	public Texture2D generateTexture() {
 		Texture2D atlastexture = atlas.texture as Texture2D;
 		Texture2D tx =  new Texture2D(_sourceSize.w, _sourceSize.h);

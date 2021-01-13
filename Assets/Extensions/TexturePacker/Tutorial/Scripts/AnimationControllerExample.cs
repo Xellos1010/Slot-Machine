@@ -5,7 +5,12 @@ public class AnimationControllerExample : MonoBehaviour {
 
 	public TPSpriteAnimation anim;
 	
-	
+
+	void Start() {
+		anim.OnEnterFrame += OnEnterFrame;
+		anim.OnAnimationComplete += OnAnimationComplete;
+		anim.OnFadeAnimationComplete += OnFadeAnimationComplete;
+	}
 
 	
 	void OnGUI() {
@@ -41,5 +46,19 @@ public class AnimationControllerExample : MonoBehaviour {
 		if(GUI.Button(rect, "Fade In")) {
 			anim.AnimateSpriteOpacity(anim.opacity, 1f, 0.5f);
 		}
+
+
+	}
+
+	void OnEnterFrame (int index) {
+		//Debug.Log("Fame index: " + index);
+	}
+
+	void OnAnimationComplete (){
+		Debug.Log("OnAnimationComplete");
+	}
+
+	void OnFadeAnimationComplete (){
+		Debug.Log("OnFadeComplete");
 	}
 }

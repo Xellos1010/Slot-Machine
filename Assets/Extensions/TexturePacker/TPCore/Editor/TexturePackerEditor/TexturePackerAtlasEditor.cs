@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 
 public class TexturePackerAtlasEditor  {
@@ -29,8 +30,7 @@ public class TexturePackerAtlasEditor  {
 	private TPAtlas currentAtlas = null;
 	
 	private float _maxY = 0f;
-	
-	
+
 	//--------------------------------------
 	// PUBLIC METHODS
 	//--------------------------------------
@@ -48,7 +48,7 @@ public class TexturePackerAtlasEditor  {
 
 		#if UNITY_4_3
 		#else
-		EditorGUIUtility.LookLikeInspector();	
+//		EditorGUIUtility.LookLikeInspector();	
 		#endif
 	
 		GUILayout.BeginHorizontal(TexturePackerStyles.toolBarBoxStyle);
@@ -82,8 +82,22 @@ public class TexturePackerAtlasEditor  {
 			TPEditorData.selectedAtlasName = atlasesNames [atlasIndex];
 		}
 
-	
 		GUIStyle btnStyle = EditorStyles.toolbarButton;
+
+		if(GUILayout.Button("Convert to UI Sprites", btnStyle)) {
+
+			string path = AssetDatabase.GetAssetPath(Resources.Load(currentAtlas.name));
+			
+			List<SpriteMetaData> sprites = currentAtlas.FramesToSprites();
+
+			TextureImporter texImp = AssetImporter.GetAtPath(path) as TextureImporter;
+			texImp.spritesheet = sprites.ToArray();
+			texImp.textureType = TextureImporterType.Sprite;
+			texImp.spriteImportMode =SpriteImportMode.Multiple;
+
+			AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate );
+
+		}
 
 		if(GUILayout.Button("Refresh", btnStyle)) {
 			TPackManager.clear();
@@ -106,9 +120,6 @@ public class TexturePackerAtlasEditor  {
 			TPEditorData.isExtensionsEnabled = !TPEditorData.isExtensionsEnabled;
 		}
 	
-	
-
-
 		search = GUILayout.TextField(search, GUI.skin.FindStyle("ToolbarSeachTextField"), TexturePackerStyles.FixedWidth(200f));
 
 
@@ -119,10 +130,7 @@ public class TexturePackerAtlasEditor  {
 			GUI.FocusControl(null);
 		}
 
-
 		GUILayout.EndHorizontal();
-
-
 
 		scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width (editor.position.width), GUILayout.Height (editor.position.height - 17f));
 
@@ -312,7 +320,6 @@ public class TexturePackerAtlasEditor  {
 	//--------------------------------------
 	// PRIVATE METHODS
 	//--------------------------------------
-
 	private void rememberImageRect(string name, Rect rect) {
 		if(images.ContainsKey(name)) {
 			images [name] = rect;

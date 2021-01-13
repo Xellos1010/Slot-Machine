@@ -25,10 +25,9 @@ public class DownloadExample : MonoBehaviour {
 
 	void Start() {
 
-
-		// Forming imag download url
+		// Creating imag download url
 		string imageUrl = path + "example.png";
-		WWW www1  = new WWW (imageUrl); //#TODO Migrate WWW to UnityWebRequest
+		WWW www1  = new WWW (imageUrl);
 
 
 		// Starting image download
@@ -36,18 +35,17 @@ public class DownloadExample : MonoBehaviour {
 
 
 
-		// Forming data download url
+		// Creating data download url
 		string dataUrl = path + "example_data.txt";
-		WWW www2  = new WWW (dataUrl); //#TODO Migrate WWW to UnityWebRequest
+		WWW www2  = new WWW (dataUrl);
 
 
 		// Starting data download
 		StartCoroutine(StartDataCoroutine(www2));
 
-
 	}
 
-	//#TODO Migrate WWW to UnityWebRequest
+
 	IEnumerator StartImageCoroutine(WWW www) {
 		yield return www;
 
@@ -61,7 +59,7 @@ public class DownloadExample : MonoBehaviour {
 		}    
 	}
 
-	//#TODO Migrate WWW to UnityWebRequest
+
 	IEnumerator StartDataCoroutine(WWW www) {
 		yield return www;
 
@@ -93,18 +91,18 @@ public class DownloadExample : MonoBehaviour {
 
 		if(loadProgress == 2) {
 			//image and atlas data downloaded
-			//registrating new atlas
+			//registration new atlas
 			TPackManager.load (atlasData, atlasImage, "NewDownloadedAtlas");
 
 
-			//applaying downloaded image to material
+			//applying downloaded image to material
 			atlasObject.GetComponent<Renderer>().material.mainTexture = atlasImage;
 
 
 			//creating mesh texture component
 			TPMeshTextureNoHelperEx meshTexture = atlasObject.AddComponent<TPMeshTextureNoHelperEx> ();
 
-			//applyong propertis and updating view
+			//applying properties and updating view
 			meshTexture.atlas = "NewDownloadedAtlas";
 			meshTexture.texture = "play";
 			meshTexture.UpdateView ();

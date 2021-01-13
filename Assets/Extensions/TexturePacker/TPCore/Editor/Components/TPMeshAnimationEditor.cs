@@ -32,7 +32,7 @@ public class TPMeshAnimationEditor : TPBaseAnimationEditor {
 		serializedObject.Update();
 		#if UNITY_4_3
 		#else
-		EditorGUIUtility.LookLikeInspector();	
+//		EditorGUIUtility.LookLikeInspector();	
 		#endif
 		SerializedProperty tps = serializedObject.FindProperty ("frames");
 		EditorGUI.BeginChangeCheck();
@@ -43,7 +43,7 @@ public class TPMeshAnimationEditor : TPBaseAnimationEditor {
 
 		#if UNITY_4_3
 		#else
-		EditorGUIUtility.LookLikeControls();	
+	//	EditorGUIUtility.LookLikeControls();	
 		#endif
 
 		

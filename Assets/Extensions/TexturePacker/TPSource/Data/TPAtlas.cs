@@ -4,6 +4,9 @@
 // @author Osipov Stanislav lacost.st@gmail.com
 //
 ////////////////////////////////////////////////////////////////////////////////
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 using UnityEngine;
 using System.Collections;
@@ -60,7 +63,20 @@ public class TPAtlas
 
 		
 	}
-	
+	#if UNITY_EDITOR
+	public List<SpriteMetaData> FramesToSprites() {
+
+		List<SpriteMetaData> sprites = new List<SpriteMetaData>();
+
+		for(int i = 0; i < _frames.Count; i++){
+			SpriteMetaData smd = frames[i].generateSprite();
+			sprites.Add(smd);
+
+		}
+		return sprites;
+	}
+	#endif
+
 	public void draw(Rect rect, string textureName) {
 		GUI.DrawTextureWithTexCoords(rect, _atlas, _frames[textureName].coords);
 	}

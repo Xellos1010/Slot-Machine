@@ -15,7 +15,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class TPForceSelectedComponent : EventDispatcher {
+public class TPForceSelectedComponent : MonoBehaviour {
 	
 	public bool IsForceSelected = true;
 

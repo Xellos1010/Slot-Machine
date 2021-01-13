@@ -186,6 +186,10 @@ public class TPSprite : MonoBehaviour, TPFrameHolder {
 		}
 
 		set {
+			if(GetComponent<Renderer>().sharedMaterial == null) {
+				return;
+			}
+
 			if(GetComponent<Renderer>().sharedMaterial.HasProperty("_Color")) {
 				GetComponent<Renderer>().sharedMaterial.color = value;
 			}  else {
