@@ -4,5 +4,6 @@ using System.Collections;
 public enum eSkins
 {
     None,
-    Aegean_Sunset
+    Aegean_Sunset,
+    Template3x5
 }

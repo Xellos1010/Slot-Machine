@@ -215,6 +215,7 @@ public class TPSprite : MonoBehaviour, TPFrameHolder {
 	
 	private TPAtlasTexture GetAtlasTExture(int index) {
 		TPFameInfo frame = frames[index];
+		Debug.Log("frame " + index + " " + frame.atlasPath + " " + frame.textureName);
 		return TPackManager.getAtlas(frame.atlasPath).getTexture(frame.textureName);
 	}
 	

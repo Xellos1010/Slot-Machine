@@ -11,12 +11,16 @@
 
 
 public enum Symbols {
-	None,
-	WD1,
-	HP1,
-	HP2,
-	HP3,
-	HP4,
-	HP5,
+	None = -1,
+	MA01,
+	MA02,
+	MA03,
+	MA04,
+	MA05,
+	MI01,
+	MI02,
+	MI03,
+	MI04,
+	MI05,
     End
 }

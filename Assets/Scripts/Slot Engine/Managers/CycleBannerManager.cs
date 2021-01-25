@@ -83,7 +83,7 @@ public class CycleBannerManager : MonoBehaviour
             iCycleBannerNumber = 0;
 
         }
-        //LeanTween.alphaCanvas(_canvasGroup, 0, fFadeLength);
+        LeanTween.alphaCanvas(_canvasGroup, 0, fFadeLength);
         yield return new WaitForSeconds(fFadeLength);
 
     }
@@ -118,15 +118,13 @@ public class CycleBannerManager : MonoBehaviour
             if (!bBannerObjectEnabled)
             {
                 IncrementCycleBanners();
-                //#TODO - Alpha Canvas for Cycle Banners
-                //LeanTween.alphaCanvas(_canvasGroup, 1, fFadeLength);
+                LeanTween.alphaCanvas(_canvasGroup, 1, fFadeLength);
                 yield return new WaitForSeconds(fFadeLength);
                 yield return new WaitForSeconds(iCycleOnDuration);
             }
             else
             {
-                //#TODO - Alpha Canvas for Cycle Banners
-                //LeanTween.alphaCanvas(_canvasGroup, 0, fFadeLength);
+                LeanTween.alphaCanvas(_canvasGroup, 0, fFadeLength);
                 yield return new WaitForSeconds(fFadeLength);
                 yield return new WaitForSeconds(iCycleOffDuration);
             }

@@ -51,7 +51,7 @@ public class Reel : MonoBehaviour
             slSlots[i].transform.parent = tParent;
             slSlots[i].transform.position = GenerateLocalPosition(i);
             //slSlots[i].transform.localScale = GenerateLocalScale();
-            slSlots[i].SetRandomSymbol();
+            slSlots[i].SetGraphicToRandomSymbol();
             slSlots[i].rReelParentObject = this;
             slSlots[i].iPositonInReel = i;
             slSlots[i].SetEventCalls(this);
@@ -207,18 +207,6 @@ public class Reel : MonoBehaviour
             DestroyImmediate(transform.GetChild(i).gameObject);
     }
 
-    /*void Update()
-    {
-        if (StateManager.enCurrentState == States.BaseGameSpinLoop)
-        {
-            for (int i = slSlots.Length-1; i >= 0; i--)
-            {
-                Debug.Log("slSlots["+i+"]");
-                slSlots[i].CheckPosition();
-            }
-        }
-    }*/
-
 }
 
 #if UNITY_EDITOR
@@ -227,22 +215,26 @@ class ReelEditor : Editor
 {
     Reel myTarget;
     SerializedProperty iExtraSlots;
+    SerializedProperty matrixType;
     public void OnEnable()
     {
         myTarget = (Reel)target;
         iExtraSlots = serializedObject.FindProperty("iExtraSlots");
+        matrixType = serializedObject.FindProperty("matrix");
     }
 
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
+        //Used to test the funciton of creating a reel - Clear the Reel - create a new reel based on matrix
         if (GUILayout.Button("Generate Slots"))
         {
             myTarget.ClearReelSlots();
-            Vector2 v2Matrixtemp = (Vector2)ReturnMatrixtype(myTarget.matrix);
+            Vector2 v2Matrixtemp = (Vector2)ReturnMatrixtype((MatrixTypes)matrixType.enumValueIndex);
             int extraslots = 0;
             try
             {
+                //TODO refactor extra slots to cushion slots - needed to spin the reel
                 extraslots = SlotEngine._instance.iExtraSlotsPerReel;
             }
             catch

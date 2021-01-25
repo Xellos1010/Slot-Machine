@@ -401,30 +401,45 @@ public class Slot :MonoBehaviour
             }
         }
     }
-            
-    public void SwitchSymbol()
+           
+    /// <summary>
+    /// Sets the graphic for the slot to toSymbol
+    /// </summary>
+    /// <param name="toSymbol">Symbol to set graphic to</param>
+    public void SetSymbolGraphicTo(Symbols toSymbol)
     {
-        ResetSpinSymbolTexture();
+        enSymbol = toSymbol;
+        ResetSymbolTextureTo();
     }
 
     public void SwitchSymbol(Symbols Symbol)
     {
         enSymbol = Symbol;
-        ResetSpinSymbolTexture();
+        ResetSymbolTextureTo();
     }
 
-    private void ResetSpinSymbolTexture()
+    private void ResetSymbolTextureTo()
     {
-        //Debug.Log("Trying to Reset Symbol Texture");
-        //Debug.Log("Skins/Aegean_Sunset/" + SlotEngine._instance.CurrentMode.ToString() + "/Symbols/" + enSymbol.ToString() + " " +  enSymbol.ToString() + "_0" + GenerateAdditionalString(0) + ".png");
-        if (Sprite.sprite.frames.Count != 72)
-            Sprite.sprite.frames = new System.Collections.Generic.List<TPFameInfo>(72);
+        Sprite.sprite.frames = new System.Collections.Generic.List<TPFameInfo>(Sprite.sprite.frames.Count);
+        //Sets the frames to the Symbol Chosen from the skin folder
         for(int i = 0; i < Sprite.sprite.frames.Count; i++)
-            Sprite.sprite.frames[i] = new TPFameInfo("Skins/Aegean_Sunset/"+SlotEngine._instance.CurrentMode.ToString()+"/Symbols/"+enSymbol.ToString(), enSymbol.ToString()+"_0" + GenerateAdditionalString(i) + ".png");
-        //Debug.Log("Frames Cleared and renamed");
-        //TPFameInfo Frame = new TPFameInfo(Application.dataPath + "Skins/Aegean_Sunset/Base Game/","HP5");
+            Sprite.sprite.frames[i] = new TPFameInfo(ReturnSymbolFrameInfo(i), 
+                enSymbol.ToString() + "_0" + String.Format("{0:0#}",i) + ".png");
         Sprite.sprite.showFrame(0);
         //Debug.Log("Showing Frame 0");
+    }
+
+    internal string GenerateSymbolTextureName(Symbols symbol, int frameNumber)
+    {
+        return symbol.ToString() + "_0" + String.Format("{0:0#}", frameNumber) + ".png";
+    }
+
+    private string ReturnSymbolFrameInfo(int iFrameNumber)
+    {
+        return "Skins/" + SlotEngine._instance.eSkin.ToString() + "/"
+            + SlotEngine._instance.CurrentMode.ToString()
+            + "/Symbols/"
+            + enSymbol.ToString();
     }
 
     private string GenerateAdditionalString(int iPlace)
@@ -440,16 +455,18 @@ public class Slot :MonoBehaviour
         Sprite.currentFrame = iFrame;
     }
 
-    public void SetRandomSymbol()
+    public void SetGraphicToRandomSymbol()
     {
-        enSymbol = GenerateSymbol();
-        SwitchSymbol();
+        SetSymbolGraphicTo(GenerateRandomSymbol());
     }
 
-    Symbols GenerateSymbol()
+    /// <summary>
+    /// Generates a random symbol and returns
+    /// </summary>
+    /// <returns></returns>
+    Symbols GenerateRandomSymbol()
     {
-        int iRandom = UnityEngine.Random.Range(1, (int)Symbols.End - 1);
-        return (Symbols)iRandom;
+        return (Symbols)UnityEngine.Random.Range(0, (int)Symbols.End - 1);
     }
 
     Vector3 GenerateLoopPositionUpdate()
